@@ -10,6 +10,7 @@ import Landing from './src/screens/Landing';
 import Home from './src/screens/Home';
 import ProductDetail from './src/screens/Product';
 import {useSelector} from 'react-redux';
+import Cart from './src/screens/Cart';
 
 function App() {
   const Stack = createStackNavigator();
@@ -17,53 +18,65 @@ function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={token ? 'Home' : 'Landing'}>
-        <Stack.Screen
-          component={Welcome}
-          name="Welcome"
-          options={{headerShown: false}}
-        />
+        {!token ? (
+          <>
+            <Stack.Screen
+              component={Welcome}
+              name="Welcome"
+              options={{headerShown: false}}
+            />
 
-        <Stack.Screen
-          component={Landing}
-          name="Landing"
-          options={{headerShown: false}}
-        />
+            <Stack.Screen
+              component={Landing}
+              name="Landing"
+              options={{headerShown: false}}
+            />
 
-        <Stack.Screen
-          component={Login}
-          name="Login"
-          options={{headerShown: false}}
-        />
+            <Stack.Screen
+              component={Login}
+              name="Login"
+              options={{headerShown: false}}
+            />
 
-        <Stack.Screen
-          component={Signup}
-          name="Signup"
-          options={{headerShown: false}}
-        />
+            <Stack.Screen
+              component={Signup}
+              name="Signup"
+              options={{headerShown: false}}
+            />
 
-        <Stack.Screen
-          component={Forgot}
-          name="Forgot"
-          options={{headerShown: false}}
-        />
+            <Stack.Screen
+              component={Forgot}
+              name="Forgot"
+              options={{headerShown: false}}
+            />
 
-        <Stack.Screen
-          component={Reset}
-          name="Reset"
-          options={{headerShown: false}}
-        />
+            <Stack.Screen
+              component={Reset}
+              name="Reset"
+              options={{headerShown: false}}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen
+              component={Home}
+              name="Home"
+              options={{headerShown: false}}
+            />
 
-        <Stack.Screen
-          component={Home}
-          name="Home"
-          options={{headerShown: false}}
-        />
+            <Stack.Screen
+              component={ProductDetail}
+              name="ProductDetail"
+              options={{headerShown: false}}
+            />
 
-        <Stack.Screen
-          component={ProductDetail}
-          name="ProductDetail"
-          options={{headerShown: false}}
-        />
+            <Stack.Screen
+              component={Cart}
+              name="Cart"
+              options={{headerShown: false}}
+            />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

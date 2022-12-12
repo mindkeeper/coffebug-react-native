@@ -7,7 +7,7 @@ import {
   ToastAndroid,
   ActivityIndicator,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import styles from './styles';
 import Input from '../../../components/Input';
@@ -20,7 +20,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const auth = useSelector(state => state.auth);
-  console.log(auth.userData);
+  const token = useSelector(state => state.auth.userData.token) || '';
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -50,6 +50,11 @@ const Login = () => {
     };
     dispatch(authAction.loginThunk(form, loginSuccess, loginError));
   };
+  useEffect(() => {
+    if (token) {
+      navigation.navigate('Home');
+    }
+  }, [token]);
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -63,6 +68,7 @@ const Login = () => {
             handler={onChangeHandler}
             placeholder="Enter your email address"
             isPassword={false}
+            type={'email-address'}
             text={'email'}
           />
           <Input

@@ -14,12 +14,14 @@ const productReducer = (prevState = initialState, {type, payload}) => {
   switch (type) {
     case getProducts.concat(pending):
       return {
+        ...prevState,
         isLoading: true,
         isError: false,
       };
 
     case getProducts.concat(rejected):
       return {
+        ...prevState,
         isLoading: false,
         isError: true,
         error: payload.error.response.data.msg,
@@ -27,18 +29,21 @@ const productReducer = (prevState = initialState, {type, payload}) => {
 
     case getProducts.concat(fulfilled):
       return {
+        ...prevState,
         isLoading: false,
         products: payload.data.data,
       };
 
     case getProductDetails.concat(pending):
       return {
+        ...prevState,
         isLoading: true,
         isError: false,
       };
 
     case getProductDetails.concat(rejected):
       return {
+        ...prevState,
         isLoading: false,
         isError: true,
         error: payload.error.response.data.msg,
@@ -46,6 +51,7 @@ const productReducer = (prevState = initialState, {type, payload}) => {
 
     case getProductDetails.concat(fulfilled):
       return {
+        ...prevState,
         isLoading: false,
         productDetail: payload.data.data,
       };

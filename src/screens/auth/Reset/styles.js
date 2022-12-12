@@ -38,6 +38,7 @@ const styles = StyleSheet.create({
   },
   form: {
     paddingTop: 130,
+    height: Dimensions.get('window').height / 2,
   },
   textConfirmation: {
     fontSize: 14,

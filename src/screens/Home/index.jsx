@@ -53,9 +53,7 @@ const Home = () => {
             horizontal={true}
             keyboardShouldPersistTaps={'always'}
             style={{height: height / 2}}>
-            {!isLoading &&
-              products &&
-              products.length > 0 &&
+            {products && products.length > 0 ? (
               products.map(item => {
                 return (
                   <ProductCard
@@ -66,7 +64,10 @@ const Home = () => {
                     productName={item.product_name}
                   />
                 );
-              })}
+              })
+            ) : (
+              <Text>We can't find anything</Text>
+            )}
           </ScrollView>
           <Text style={styles.category}>Promo for you</Text>
           <Text

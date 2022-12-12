@@ -45,6 +45,7 @@ function Navbar({children}) {
         ToastAndroid.SHORT,
         ToastAndroid.TOP,
       );
+      setModalVisible(false);
       navigation.navigate('Welcome');
       AsyncStorage.clear();
     };
@@ -101,7 +102,7 @@ function Navbar({children}) {
                 style={styles.imageBottom}
               /> */}
               <IconComunity
-                name="chevron-double-right"
+                name="cart-arrow-down"
                 size={20}
                 style={styles.imageBottom}
               />
@@ -194,7 +195,7 @@ function Navbar({children}) {
           <View onPress={() => DrawerLayout.current.openDrawer()}>
             <IconComunity
               name={'chevron-double-right'}
-              style={{fontSize: 40}}
+              style={{fontSize: 40, color: '#6A4029'}}
             />
           </View>
           <View style={styles.left}>
