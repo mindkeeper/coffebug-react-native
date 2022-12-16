@@ -10,14 +10,15 @@ const initialState = {
     price: '',
     image: '',
     productName: '',
-    size_id: '',
+    sizeId: '',
     qty: 0,
-    promo_id: '1',
-    delivery_id: '',
-    payment_id: '',
+    promoId: '1',
+    deliveryId: '',
+    paymentId: '',
     subtotal: 0,
   },
   history: [],
+  pagination: {},
 };
 
 const transactionReducer = (prevState = initialState, {type, payload}) => {
@@ -25,6 +26,7 @@ const transactionReducer = (prevState = initialState, {type, payload}) => {
     createTransaction,
     getHistory,
     transactionData,
+    transactionReset,
     pending,
     rejected,
     fulfilled,
@@ -66,11 +68,14 @@ const transactionReducer = (prevState = initialState, {type, payload}) => {
         error: payload.error.response.data.msg,
       };
     case getHistory.concat(fulfilled):
+      const newHistory = payload.data.data;
+      const page = payload.data.meta.page;
       return {
         ...prevState,
         isLoading: false,
         isFulfilled: true,
-        history: payload.data.data,
+        history: page > 1 ? [...prevState.history, ...newHistory] : newHistory,
+        pagination: payload.data.meta,
       };
 
     case transactionData:
@@ -82,13 +87,16 @@ const transactionReducer = (prevState = initialState, {type, payload}) => {
           image: payload.data.image,
           productName: payload.data.productName,
           qty: payload.data.qty || 0,
-          size_id: payload.data.sizeId,
-          promo_id: '1',
-          delivery_id: payload.data.deliveryId || '',
-          payment_id: payload.data.paymentId || '',
+          sizeId: payload.data.sizeId,
+          promoId: '1',
+          deliveryId: payload.data.deliveryId || '',
+          paymentId: payload.data.paymentId || '',
           subtotal: payload.data.subtotal || 0,
         },
       };
+
+    case transactionReset:
+      return initialState;
 
     default:
       return prevState;

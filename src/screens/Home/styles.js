@@ -69,6 +69,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#6A4029',
   },
+  loading: {
+    backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default styles;

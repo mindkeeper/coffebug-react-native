@@ -28,15 +28,17 @@ function ProductDetail(props) {
   const detail = useSelector(state => state.products.productDetail);
   const [size, setSize] = useState('1');
   const [modalVisible, setModalVisible] = useState(false);
+  const cart = useSelector(state => state.transaction.cart);
 
   const addToChartHandler = (detail, size) => {
     const upSizeCost = size == 1 ? 0 : size == 2 ? 2000 : 4000;
     console.log(upSizeCost);
     const body = {
+      ...cart,
       productId: detail.id,
       productName: detail.product_name,
       price: parseInt(detail.price),
-      size_id: size,
+      sizeId: size,
       image: detail.image,
       subtotal: parseInt(detail.price) + upSizeCost,
     };
@@ -184,13 +186,6 @@ function ProductDetail(props) {
                     onPress={() => {
                       addToChartHandler(detail, size);
                       setModalVisible(false);
-                      return ToastAndroid.showWithGravityAndOffset(
-                        `Added Product To Cart`,
-                        ToastAndroid.SHORT,
-                        ToastAndroid.TOP,
-                        25,
-                        50,
-                      );
                     }}
                     style={[styles.buttonModal, styles.buttonClose]}>
                     <Text style={styles.textStyle}>Continue</Text>

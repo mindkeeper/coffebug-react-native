@@ -15,12 +15,12 @@ import google from '../../../assets/images/google.png';
 import {useDispatch, useSelector} from 'react-redux';
 import authAction from '../../../redux/actions/auth';
 import {useNavigation} from '@react-navigation/native';
+import userAction from '../../../redux/actions/user';
 
 const Login = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const auth = useSelector(state => state.auth);
-  const token = useSelector(state => state.auth.userData.token) || '';
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -33,12 +33,13 @@ const Login = () => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    const loginSuccess = () => {
+    const loginSuccess = token => {
       ToastAndroid.showWithGravity(
         `Welcome ${form.email}, login successfully`,
         ToastAndroid.SHORT,
         ToastAndroid.TOP,
       );
+      dispatch(userAction.getUserThunk(token));
       navigation.navigate('Home');
     };
     const loginError = error => {
@@ -50,11 +51,6 @@ const Login = () => {
     };
     dispatch(authAction.loginThunk(form, loginSuccess, loginError));
   };
-  useEffect(() => {
-    if (token) {
-      navigation.navigate('Home');
-    }
-  }, [token]);
   return (
     <View style={styles.container}>
       <ImageBackground

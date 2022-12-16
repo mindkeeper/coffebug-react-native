@@ -93,7 +93,8 @@ const loginThunk = (body, cbSuccess, cbDenied) => {
       // console.log('redux', body);
       const result = await login(body);
       dispatch(loginFulfilled(result.data));
-      typeof cbSuccess === 'function' && cbSuccess();
+      console.log(result.data);
+      typeof cbSuccess === 'function' && cbSuccess(result.data.data.token);
     } catch (error) {
       dispatch(loginRejected(error));
       console.log(error);
@@ -149,13 +150,18 @@ const logoutThunk = (token, cbSuccess, cbDenied) => {
     }
   };
 };
-
+const resetState = () => {
+  return {
+    type: ACTION_STRING.authReset,
+  };
+};
 const authAction = {
   registerThunk,
   loginThunk,
   forgotThunk,
   resetThunk,
   logoutThunk,
+  resetState,
 };
 
 export default authAction;

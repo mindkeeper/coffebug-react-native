@@ -11,6 +11,7 @@ import {
   Pressable,
   ScrollView,
   useWindowDimensions,
+  ActivityIndicator,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -21,13 +22,32 @@ const Home = () => {
   const navigation = useNavigation();
   const {height} = useWindowDimensions();
   const dispatch = useDispatch();
-  const [query, setQuery] = useState({sort: '', categories: 'coffee', page: 1});
+  const [query, setQuery] = useState({
+    sort: 'popular',
+    categories: '',
+    page: 1,
+  });
   const products = useSelector(state => state.products.products);
   const isLoading = useSelector(state => state.products.isLoading);
 
   useEffect(() => {
     dispatch(productActions.getProductsThunk(query));
   }, [query]);
+
+  useEffect(() => {
+    let refresh = false;
+    const focusEvent = navigation.addListener('focus', e => {
+      if (refresh) dispatch(productActions.getProductsThunk(query));
+    });
+    const blurEvent = navigation.addListener('blur', e => {
+      refresh = true;
+    });
+    return () => {
+      focusEvent();
+      blurEvent();
+    };
+  }, [query, navigation]);
+
   console.log(products);
   return (
     <View style={styles.sectionContainer}>
@@ -53,7 +73,11 @@ const Home = () => {
             horizontal={true}
             keyboardShouldPersistTaps={'always'}
             style={{height: height / 2}}>
-            {products && products.length > 0 ? (
+            {isLoading ? (
+              <View style={styles.loading}>
+                <ActivityIndicator size="large" color="black" />
+              </View>
+            ) : products && products.length > 0 ? (
               products.map(item => {
                 return (
                   <ProductCard

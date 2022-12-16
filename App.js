@@ -9,74 +9,104 @@ import Welcome from './src/screens/Welcome';
 import Landing from './src/screens/Landing';
 import Home from './src/screens/Home';
 import ProductDetail from './src/screens/Product';
-import {useSelector} from 'react-redux';
 import Cart from './src/screens/Cart';
+import Delivery from './src/screens/Delivery';
+import Payment from './src/screens/Payment';
+import History from './src/screens/History';
+import Profile from './src/screens/Profile';
+import Splashscreen from './src/screens/Splash';
+import EditProfile from './src/screens/EditProfile';
 
 function App() {
   const Stack = createStackNavigator();
-  const token = useSelector(state => state.auth.userData.token) || '';
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={token ? 'Home' : 'Landing'}>
-        {!token ? (
-          <>
-            <Stack.Screen
-              component={Welcome}
-              name="Welcome"
-              options={{headerShown: false}}
-            />
+      <Stack.Navigator initialRouteName={'SplashScreen'}>
+        <Stack.Screen
+          component={Welcome}
+          name="Welcome"
+          options={{headerShown: false}}
+        />
 
-            <Stack.Screen
-              component={Landing}
-              name="Landing"
-              options={{headerShown: false}}
-            />
+        <Stack.Screen
+          component={Landing}
+          name="Landing"
+          options={{headerShown: false}}
+        />
 
-            <Stack.Screen
-              component={Login}
-              name="Login"
-              options={{headerShown: false}}
-            />
+        <Stack.Screen
+          component={Login}
+          name="Login"
+          options={{headerShown: false}}
+        />
 
-            <Stack.Screen
-              component={Signup}
-              name="Signup"
-              options={{headerShown: false}}
-            />
+        <Stack.Screen
+          component={Signup}
+          name="Signup"
+          options={{headerShown: false}}
+        />
 
-            <Stack.Screen
-              component={Forgot}
-              name="Forgot"
-              options={{headerShown: false}}
-            />
+        <Stack.Screen
+          component={Forgot}
+          name="Forgot"
+          options={{headerShown: false}}
+        />
 
-            <Stack.Screen
-              component={Reset}
-              name="Reset"
-              options={{headerShown: false}}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen
-              component={Home}
-              name="Home"
-              options={{headerShown: false}}
-            />
+        <Stack.Screen
+          component={Reset}
+          name="Reset"
+          options={{headerShown: false}}
+        />
 
-            <Stack.Screen
-              component={ProductDetail}
-              name="ProductDetail"
-              options={{headerShown: false}}
-            />
+        <Stack.Screen
+          component={Splashscreen}
+          name="SplashScreen"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={Home}
+          name="Home"
+          options={{headerShown: false}}
+        />
 
-            <Stack.Screen
-              component={Cart}
-              name="Cart"
-              options={{headerShown: false}}
-            />
-          </>
-        )}
+        <Stack.Screen
+          component={ProductDetail}
+          name="ProductDetail"
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          component={Cart}
+          name="Cart"
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          component={Delivery}
+          name="Delivery"
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          component={Payment}
+          name="Payment"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={History}
+          name="History"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={Profile}
+          name="Profile"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={EditProfile}
+          name="EditProfile"
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

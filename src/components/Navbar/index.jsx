@@ -15,7 +15,6 @@ import {
   View,
   Image,
   Text,
-  useWindowDimensions,
   TouchableOpacity,
   Modal,
   Pressable,
@@ -25,17 +24,14 @@ import {
 
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
-import userAction from '../../redux/actions/user';
 import authAction from '../../redux/actions/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {clearState} from '../../modules/helper/clearState';
 
 function Navbar({children}) {
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
-  const {height, width} = useWindowDimensions();
   const dispatch = useDispatch();
   const user = useSelector(state => state.profile.profile);
-  //   const email = useSelector(state => state.auth.userData.email);
   const auth = useSelector(state => state.auth);
 
   const logoutHandler = () => {
@@ -47,7 +43,7 @@ function Navbar({children}) {
       );
       setModalVisible(false);
       navigation.navigate('Welcome');
-      AsyncStorage.clear();
+      clearState(dispatch);
     };
     const LogoutError = error => {
       ToastAndroid.showWithGravityAndOffset(
@@ -63,18 +59,18 @@ function Navbar({children}) {
     );
   };
 
-  useEffect(() => {
-    dispatch(userAction.getUserThunk(auth.userData.token));
-  }, [dispatch]);
-
   const renderDrawer = () => {
     return (
       <View>
-        <View style={styles.continerSwipe}>
+        <Pressable
+          style={styles.continerSwipe}
+          onPress={() => navigation.navigate('Profile')}>
           <Image source={{uri: user.image}} style={styles.imageDrawer} />
-          <Text style={styles.username}>{user.username}</Text>
+          <Text style={styles.username}>
+            {user.display_name ? `${user.display_name}` : 'Your username here'}
+          </Text>
           <Text style={styles.email}>{user.email}</Text>
-        </View>
+        </Pressable>
         <View
           style={{
             paddingLeft: 35,
@@ -85,22 +81,14 @@ function Navbar({children}) {
             justifyContent: 'space-between',
           }}>
           <View>
-            <View style={styles.containerBottom}>
-              {/* <Icons
-                name={'user-circle'}
-                size={20}
-                style={styles.imageBottom}
-              /> */}
+            <Pressable
+              style={styles.containerBottom}
+              onPress={() => navigation.navigate('EditProfile')}>
               <AntIcons name="user" size={20} style={styles.imageBottom} />
               <Text style={styles.textBottom}>Edit Profile</Text>
-            </View>
+            </Pressable>
             <Divider style={{width: '90%', margin: 3}} />
             <View style={styles.containerBottom}>
-              {/* <IconComunity
-                name={'cart-arrow-down'}
-                size={20}
-                style={styles.imageBottom}
-              /> */}
               <IconComunity
                 name="cart-arrow-down"
                 size={20}
@@ -118,14 +106,16 @@ function Navbar({children}) {
               <Text style={styles.textBottom}>All menu</Text>
             </View>
             <Divider style={{width: '90%', margin: 3}} />
-            <View style={styles.containerBottom}>
+            <Pressable
+              onPress={() => navigation.navigate('History')}
+              style={styles.containerBottom}>
               <Icons
                 name={'sticky-note'}
                 size={20}
                 style={styles.imageBottom}
               />
-              <Text style={styles.textBottom}>Privacy policy</Text>
-            </View>
+              <Text style={styles.textBottom}>History</Text>
+            </Pressable>
             <Divider style={{width: '90%', margin: 3}} />
             <View style={styles.containerBottom}>
               {/* <Image source={IconUser} style={styles.imageBottom}/> */}

@@ -38,13 +38,14 @@ function Cart() {
   }, [totalPayment]);
 
   const checkOutHandler = (cart, quantity, totalPayment) => {
+    console.log(cart);
     const body = {
       ...cart,
       subtotal: totalPayment,
       qty: quantity,
     };
     dispatch(transactionActions.dataTransaction(body));
-    navigation.navigate('Cart');
+    navigation.navigate('Delivery');
     return ToastAndroid.showWithGravity(
       `Product added to cart`,
       ToastAndroid.SHORT,

@@ -2,18 +2,28 @@ import ACTION_STRING from '../actions/actionString';
 
 const initialState = {
   userData: {
-    id: null,
-    token: null,
+    id: '',
+    token: '',
+    role: '',
   },
   isLoading: false,
   isError: false,
   isFulfilled: false,
-  error: null,
+  error: '',
 };
 
 const authReducer = (prevState = initialState, {type, payload}) => {
-  const {register, login, forgot, reset, logout, pending, rejected, fulfilled} =
-    ACTION_STRING;
+  const {
+    register,
+    login,
+    forgot,
+    reset,
+    logout,
+    authReset,
+    pending,
+    rejected,
+    fulfilled,
+  } = ACTION_STRING;
   switch (type) {
     case register + pending:
       return {
@@ -59,6 +69,7 @@ const authReducer = (prevState = initialState, {type, payload}) => {
         userData: {
           id: payload.data.data.payload.id,
           token: payload.data.data.token,
+          role: payload.data.data.payload.role,
         },
       };
 
@@ -124,6 +135,9 @@ const authReducer = (prevState = initialState, {type, payload}) => {
         error: payload.error,
       };
     case logout + fulfilled:
+      return initialState;
+
+    case reset:
       return initialState;
 
     default:

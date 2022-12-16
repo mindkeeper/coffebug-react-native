@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BaseUrl = process.env.BACKEND_URL;
+const baseUrl = `${process.env.BACKEND_URL}/api/users`;
 
 const config = token => {
   return {
@@ -11,7 +11,9 @@ const config = token => {
 };
 
 export const getUser = token => {
-  const URL = `${BaseUrl}/api/users`;
-  console.log('util', URL);
+  const URL = `${baseUrl}`;
   return axios.get(URL, config(token));
 };
+
+export const editUser = (body, token) =>
+  axios.patch(`${baseUrl}/edit-profile`, body, config(token));

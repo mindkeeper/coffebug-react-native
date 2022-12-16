@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const config = token => {
-  return {header: {'x-access-token': token}};
+  return {headers: {'x-access-token': token}};
 };
 
 const baseUrl = `${process.env.BACKEND_URL}/api/products`;

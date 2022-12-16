@@ -6,7 +6,7 @@ const initialState = {
     first_name: '',
     last_name: '',
     display_name: '',
-    genre: '',
+    gender: '',
     birthday: '',
     address: '',
     image: '',
@@ -17,10 +17,12 @@ const initialState = {
   isError: false,
   isFulfilled: false,
   error: null,
+  isLoggedIn: false,
 };
 
 const userReducer = (prevState = initialState, {type, payload}) => {
-  const {getUser, pending, rejected, fulfilled} = ACTION_STRING;
+  const {getUser, userReset, editProfile, pending, rejected, fulfilled} =
+    ACTION_STRING;
   switch (type) {
     case getUser + pending:
       return {
@@ -34,20 +36,7 @@ const userReducer = (prevState = initialState, {type, payload}) => {
         ...prevState,
         isError: true,
         isLoading: false,
-        isFulfilled: false,
         error: payload.error,
-        profile: {
-          username: null,
-          first_name: null,
-          last_name: null,
-          display_name: null,
-          genre: null,
-          birthday: null,
-          address: null,
-          image: null,
-          phone: null,
-          email: null,
-        },
       };
     case getUser + fulfilled:
       return {
@@ -55,12 +44,13 @@ const userReducer = (prevState = initialState, {type, payload}) => {
         isLoading: false,
         isError: false,
         isFulfilled: true,
+        isLoggedIn: true,
         profile: {
           username: payload.data.data[0].username,
           first_name: payload.data.data[0].first_name,
           last_name: payload.data.data[0].last_name,
           display_name: payload.data.data[0].display_name,
-          genre: payload.data.data[0].genre,
+          gender: payload.data.data[0].gender,
           birthday: payload.data.data[0].birthday,
           address: payload.data.data[0].address,
           image: payload.data.data[0].image,
@@ -68,6 +58,33 @@ const userReducer = (prevState = initialState, {type, payload}) => {
           email: payload.data.data[0].email,
         },
       };
+
+    case editProfile + pending:
+      return {
+        ...prevState,
+        isLoading: true,
+        isError: false,
+        isFulfilled: false,
+      };
+    case editProfile + rejected:
+      return {
+        ...prevState,
+        isError: true,
+        isLoading: false,
+        error: payload.error,
+      };
+    case editProfile + fulfilled:
+      return {
+        ...prevState,
+        isLoading: false,
+        isError: false,
+        isFulfilled: true,
+        isLoggedIn: true,
+        profile: {...prevState.profile, ...payload.data.data},
+      };
+
+    case userReset:
+      return initialState;
 
     default:
       return prevState;

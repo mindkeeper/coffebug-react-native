@@ -11,6 +11,7 @@ const {
   pending,
   rejected,
   fulfilled,
+  transactionReset,
 } = ACTION_STRING;
 
 const createTransactionPending = () => ({
@@ -41,10 +42,10 @@ const getHistoryFulfilled = data => ({
   payload: {data},
 });
 
-const getHistoryThunk = token => async dispatch => {
+const getHistoryThunk = (token, params) => async dispatch => {
   try {
     dispatch(getHistoryPending());
-    const result = await apiGetHistory(token);
+    const result = await apiGetHistory(token, params);
     dispatch(getHistoryFulfilled(result.data));
     typeof cbSuccess === 'function' && cbSuccess();
   } catch (error) {
@@ -72,10 +73,14 @@ const dataTransaction = data => {
     payload: {data},
   };
 };
+const reset = () => {
+  return {type: transactionReset};
+};
 const transactionActions = {
   createTransactionThunk,
   dataTransaction,
   getHistoryThunk,
+  reset,
 };
 
 export default transactionActions;
