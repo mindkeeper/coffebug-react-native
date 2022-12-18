@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import styles from './styles';
 import IconComunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import DatePicker from 'react-native-date-picker';
+import imgDefault from '../../assets/images/default.png';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {
   View,
@@ -18,6 +19,7 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import userAction from '../../redux/actions/user';
+import Navbar from '../../components/Navbar';
 
 function EditProfile() {
   const [checked, setChecked] = useState('female');
@@ -88,11 +90,13 @@ function EditProfile() {
         uri:
           Platform.OS !== 'android' ? 'file://' + file[0]?.uri : file[0]?.uri,
       });
-    if (body?.display_name) bodies.append('display_name', body.display_name);
-    if (body?.display_name) bodies.append('display_name', body.display_name);
-    if (body?.address) bodies.append('address', body.address);
-    if (updateDate !== profile.birthday) bodies.append('birthday', updateDate);
-    if (checked !== profile.gender) bodies.append('gender', checked);
+    body.userName && bodies.append('username', body.userName);
+    body.firstName && bodies.append('first_name', body.firstName);
+    body.lastName && bodies.append('last_name', body.lastName);
+    body.display_name && bodies.append('display_name', body.display_name);
+    body.address && bodies.append('address', body.address);
+    updateDate !== profile.birthday && bodies.append('birthday', updateDate);
+    checked !== profile.gender && bodies.append('gender', checked);
     // console.log(bodies);
     dispatch(userAction.editProfileThunk(bodies, token, Success, Error));
   };
@@ -174,244 +178,272 @@ function EditProfile() {
 
   const dateHandler = date => new Date(date).toLocaleDateString();
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.navbar}>
-        <IconComunity
-          name={'chevron-left'}
-          size={20}
-          style={styles.icons}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-        <Text style={styles.titleNavbar}>Edit profile</Text>
-      </View>
-      <View style={styles.userinfo}>
-        <Image
-          source={file ? {uri: file[0].uri} : {uri: profile.image}}
-          style={styles.image}
-        />
-        <Pressable
-          style={styles.conPencl}
-          onPress={() => setModalVisible(true)}>
-          <IconComunity name={'pencil'} style={styles.pencil} size={20} />
-        </Pressable>
-      </View>
-      <View style={styles.containerInput}>
-        <Text style={styles.label}>Name :</Text>
-        <TextInput
-          placeholder={profile.display_name}
-          placeholderTextColor="black"
-          style={styles.input}
-          onChangeText={text => changeHandler(text, 'display_name')}
-        />
-      </View>
-      <View style={styles.containerRadio}>
-        <View style={styles.radio}>
-          <Pressable
-            style={
-              checked === 'Female' ? styles.checkedOuter : styles.unchekedOuter
+    <Navbar>
+      <ScrollView style={styles.container}>
+        <View style={styles.userinfo}>
+          <Image
+            source={
+              file
+                ? {uri: file[0].uri}
+                : profile.image
+                ? {uri: profile.image}
+                : imgDefault
             }
-            onPress={() => setChecked('Female')}>
-            <View
+            style={styles.image}
+          />
+          <Pressable
+            style={styles.conPencl}
+            onPress={() => setModalVisible(true)}>
+            <IconComunity name={'pencil'} style={styles.pencil} size={20} />
+          </Pressable>
+        </View>
+        <View style={styles.containerInput}>
+          <Text style={styles.label}>Display Name :</Text>
+          <TextInput
+            placeholder={profile.display_name || 'Input your display name here'}
+            placeholderTextColor="black"
+            style={styles.input}
+            onChangeText={text => changeHandler(text, 'display_name')}
+          />
+        </View>
+        <View style={styles.containerRadio}>
+          <View style={styles.radio}>
+            <Pressable
               style={
                 checked === 'Female'
-                  ? styles.checkedInner
-                  : styles.unchekedInner
-              }></View>
-          </Pressable>
-          <Text
-            style={
-              checked === 'Female' ? styles.checkedText : styles.uncheckedText
-            }>
-            Female
-          </Text>
-        </View>
-        <View style={styles.radio}>
-          <Pressable
-            style={
-              checked === 'Male' ? styles.checkedOuter : styles.unchekedOuter
-            }
-            onPress={() => setChecked('Male')}>
-            <View
-              style={
-                checked === 'Male' ? styles.checkedInner : styles.unchekedInner
-              }></View>
-          </Pressable>
-          <Text
-            style={
-              checked === 'Male' ? styles.checkedText : styles.uncheckedText
-            }>
-            Male
-          </Text>
-        </View>
-      </View>
-      <View style={{marginBottom: 15}}>
-        <Text style={styles.label}>Email address :</Text>
-        <TextInput
-          placeholder={profile.email}
-          style={styles.input}
-          placeholderTextColor="black"
-          editable={false}
-          selectTextOnFocus={false}
-        />
-      </View>
-      <View style={{marginBottom: 15}}>
-        <Text style={styles.label}>Phone Number :</Text>
-        <TextInput
-          placeholder={profile.phone}
-          style={styles.input}
-          placeholderTextColor="black"
-          editable={false}
-          selectTextOnFocus={false}
-        />
-      </View>
-      <Pressable style={{marginBottom: 15}}>
-        <Text style={styles.label}>Date of Birth :</Text>
-        <Pressable style={styles.input}>
-          <View
-            style={{
-              justifyContent: 'space-between',
-              display: 'flex',
-              flexDirection: 'row',
-            }}>
+                  ? styles.checkedOuter
+                  : styles.unchekedOuter
+              }
+              onPress={() => setChecked('Female')}>
+              <View
+                style={
+                  checked === 'Female'
+                    ? styles.checkedInner
+                    : styles.unchekedInner
+                }></View>
+            </Pressable>
             <Text
               style={
-                updateDate === profile.birthday
-                  ? styles.berubah
-                  : styles.tanggal
+                checked === 'Female' ? styles.checkedText : styles.uncheckedText
               }>
-              {dateHandler(date)}
+              Female
             </Text>
-            <IconComunity
-              name={'calendar-range'}
-              style={{paddingTop: 15, color: 'black'}}
-              size={20}
-              onPress={() => {
-                setOpen(true);
-              }}
-            />
           </View>
-        </Pressable>
-        <DatePicker
-          modal
-          open={open}
-          date={date}
-          mode={'date'}
-          onConfirm={date => {
-            setOpen(false);
-            let dd = String(date.getDate()).padStart(2, '0');
-            let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
-            let yyyy = date.getFullYear();
-            const updatedDate = `${yyyy}/${mm}/${dd}`;
-            setDate(date);
-            setUpdateDate(updatedDate);
-          }}
-          onCancel={() => {
-            setOpen(false);
-          }}
-        />
-      </Pressable>
-      <View style={{marginBottom: 15}}>
-        <Text style={styles.label}>Delivery address :</Text>
-        <TextInput
-          placeholder={profile.address}
-          placeholderTextColor="black"
-          style={styles.input}
-          onChangeText={text => changeHandler(text, 'address')}
-        />
-      </View>
-      <TouchableOpacity activeOpacity={0.8} onPress={saveHandler}>
-        <View
-          style={{
-            marginTop: 10,
-            marginBottom: 55,
-            backgroundColor: allow ? '#6A4029' : '#9F9F9F',
-            height: 70,
-            borderRadius: 20,
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: 'flex',
-            flexDirection: 'row',
-            alignContent: 'center',
-          }}>
-          {isLoading ? (
-            <ActivityIndicator size="large" color="white" />
-          ) : (
+          <View style={styles.radio}>
+            <Pressable
+              style={
+                checked === 'Male' ? styles.checkedOuter : styles.unchekedOuter
+              }
+              onPress={() => setChecked('Male')}>
+              <View
+                style={
+                  checked === 'Male'
+                    ? styles.checkedInner
+                    : styles.unchekedInner
+                }></View>
+            </Pressable>
             <Text
-              style={{
-                color: 'white',
-                fontFamily: 'Poppins-Black',
-                fontSize: 17,
-              }}>
-              Save and Update
+              style={
+                checked === 'Male' ? styles.checkedText : styles.uncheckedText
+              }>
+              Male
             </Text>
-          )}
+          </View>
         </View>
-      </TouchableOpacity>
-      <Modal
-        visible={modal}
-        transparent={true}
-        onRequestClose={() => {
-          setModalVisible();
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
+        <View style={{marginBottom: 15}}>
+          <Text style={styles.label}>Email address :</Text>
+          <TextInput
+            placeholder={profile.email}
+            style={styles.input}
+            placeholderTextColor="black"
+            editable={false}
+            selectTextOnFocus={false}
+          />
+        </View>
+        <View style={{marginBottom: 15}}>
+          <Text style={styles.label}>Username :</Text>
+          <TextInput
+            placeholder={profile.username || 'Input your username here'}
+            placeholderTextColor="black"
+            style={styles.input}
+            onChangeText={text => changeHandler(text, 'userName')}
+          />
+        </View>
+        <View style={{marginBottom: 15}}>
+          <Text style={styles.label}>Firstname :</Text>
+          <TextInput
+            placeholder={profile.first_name || 'Input your firstname here'}
+            placeholderTextColor="black"
+            style={styles.input}
+            onChangeText={text => changeHandler(text, 'firstName')}
+          />
+        </View>
+        <View style={{marginBottom: 15}}>
+          <Text style={styles.label}>Lastname :</Text>
+          <TextInput
+            placeholder={profile.last_name || 'Input your lastname here'}
+            placeholderTextColor="black"
+            style={styles.input}
+            onChangeText={text => changeHandler(text, 'lastName')}
+          />
+        </View>
+        <View style={{marginBottom: 15}}>
+          <Text style={styles.label}>Phone Number :</Text>
+          <TextInput
+            placeholder={profile.phone}
+            style={styles.input}
+            placeholderTextColor="black"
+            editable={false}
+            selectTextOnFocus={false}
+          />
+        </View>
+        <Pressable style={{marginBottom: 15}}>
+          <Text style={styles.label}>Date of Birth :</Text>
+          <Pressable style={styles.input}>
             <View
               style={{
-                justifyContent: 'flex-end',
-                position: 'absolute',
-                right: 15,
-                top: 15,
+                justifyContent: 'space-between',
+                display: 'flex',
+                flexDirection: 'row',
               }}>
+              <Text
+                style={
+                  updateDate === profile.birthday
+                    ? styles.berubah
+                    : styles.tanggal
+                }>
+                {dateHandler(date)}
+              </Text>
               <IconComunity
-                name="window-close"
-                size={50}
-                style={styles.icons}
-                onPress={() => setModalVisible(!modal)}
+                name={'calendar-range'}
+                style={{paddingTop: 15, color: 'black'}}
+                size={20}
+                onPress={() => {
+                  setOpen(true);
+                }}
               />
             </View>
-            <Pressable
-              style={{
-                marginTop: 20,
-                marginBottom: 15,
-                padding: 10,
-                backgroundColor: '#DCDCDC',
-              }}
-              onPress={() => {
-                launchCameras();
-                setModalVisible(!modal);
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Black',
-                  color: '#868686',
-                  fontSize: 17,
-                  textAlign: 'center',
-                }}>
-                OPEN CAMERA
-              </Text>
-            </Pressable>
-            <Pressable
-              style={{padding: 10, backgroundColor: '#DCDCDC'}}
-              onPress={() => {
-                launchImageLibrarys();
-                setModalVisible(!modal);
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Black',
-                  color: '#868686',
-                  fontSize: 17,
-                  textAlign: 'center',
-                }}>
-                OPEN IMAGE LIBRARY
-              </Text>
-            </Pressable>
-          </View>
+          </Pressable>
+          <DatePicker
+            modal
+            open={open}
+            date={date}
+            mode={'date'}
+            onConfirm={date => {
+              setOpen(false);
+              let dd = String(date.getDate()).padStart(2, '0');
+              let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+              let yyyy = date.getFullYear();
+              const updatedDate = `${yyyy}/${mm}/${dd}`;
+              setDate(date);
+              setUpdateDate(updatedDate);
+            }}
+            onCancel={() => {
+              setOpen(false);
+            }}
+          />
+        </Pressable>
+        <View style={{marginBottom: 15}}>
+          <Text style={styles.label}>Delivery address :</Text>
+          <TextInput
+            placeholder={profile.address}
+            placeholderTextColor="black"
+            style={styles.input}
+            onChangeText={text => changeHandler(text, 'address')}
+          />
         </View>
-      </Modal>
-    </ScrollView>
+        <TouchableOpacity activeOpacity={0.8} onPress={saveHandler}>
+          <View
+            style={{
+              marginTop: 10,
+              marginBottom: 55,
+              backgroundColor: allow ? '#6A4029' : '#9F9F9F',
+              height: 70,
+              borderRadius: 20,
+              justifyContent: 'center',
+              alignItems: 'center',
+              display: 'flex',
+              flexDirection: 'row',
+              alignContent: 'center',
+            }}>
+            {isLoading ? (
+              <ActivityIndicator size="large" color="white" />
+            ) : (
+              <Text
+                style={{
+                  color: 'white',
+                  fontFamily: 'Poppins-Black',
+                  fontSize: 17,
+                }}>
+                Save and Update
+              </Text>
+            )}
+          </View>
+        </TouchableOpacity>
+        <Modal
+          visible={modal}
+          transparent={true}
+          onRequestClose={() => {
+            setModalVisible();
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View
+                style={{
+                  justifyContent: 'flex-end',
+                  position: 'absolute',
+                  right: 15,
+                  top: 15,
+                }}>
+                <IconComunity
+                  name="window-close"
+                  size={50}
+                  style={styles.icons}
+                  onPress={() => setModalVisible(!modal)}
+                />
+              </View>
+              <Pressable
+                style={{
+                  marginTop: 20,
+                  marginBottom: 15,
+                  padding: 10,
+                  backgroundColor: '#DCDCDC',
+                }}
+                onPress={() => {
+                  launchCameras();
+                  setModalVisible(!modal);
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Black',
+                    color: '#868686',
+                    fontSize: 17,
+                    textAlign: 'center',
+                  }}>
+                  OPEN CAMERA
+                </Text>
+              </Pressable>
+              <Pressable
+                style={{padding: 10, backgroundColor: '#DCDCDC'}}
+                onPress={() => {
+                  launchImageLibrarys();
+                  setModalVisible(!modal);
+                }}>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins-Black',
+                    color: '#868686',
+                    fontSize: 17,
+                    textAlign: 'center',
+                  }}>
+                  OPEN IMAGE LIBRARY
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
+      </ScrollView>
+    </Navbar>
   );
 }
 

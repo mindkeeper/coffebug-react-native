@@ -29,10 +29,13 @@ const productReducer = (prevState = initialState, {type, payload}) => {
       };
 
     case getProducts.concat(fulfilled):
+      const newProduct = payload.data.data;
+      const page = payload.data.meta.page;
       return {
         ...prevState,
         isLoading: false,
-        products: payload.data.data,
+        products:
+          page > 1 ? [...prevState.products, ...newProduct] : newProduct,
         pagination: payload.data.meta,
       };
 

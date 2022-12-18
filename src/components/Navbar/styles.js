@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     color: '#6A4029',
   },
   Icons: {
+    color: '#6A4029',
     fontSize: 30,
     marginHorizontal: 3,
   },

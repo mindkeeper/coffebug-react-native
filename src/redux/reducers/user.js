@@ -58,7 +58,6 @@ const userReducer = (prevState = initialState, {type, payload}) => {
           email: payload.data.data[0].email,
         },
       };
-
     case editProfile + pending:
       return {
         ...prevState,

@@ -29,16 +29,19 @@ function History() {
           justifyContent: 'center',
           paddingBottom: 10,
         }}>
-        {isLoading && <ActivityIndicator size="large" color="black" />}
-        {pagination.totalPage == query.page && (
-          <Text
-            style={{
-              textAlign: 'center',
-              color: 'black',
-              fontFamily: 'Poppins-Regular',
-            }}>
-            No more transcations history
-          </Text>
+        {isLoading ? (
+          <ActivityIndicator size="large" color="black" />
+        ) : (
+          pagination.totalPage == query.page && (
+            <Text
+              style={{
+                textAlign: 'center',
+                color: 'black',
+                fontFamily: 'Poppins-Regular',
+              }}>
+              No more transcations history
+            </Text>
+          )
         )}
       </View>
     );
@@ -66,18 +69,20 @@ function History() {
           }}
         />
         <Text style={styles.title}>Order History</Text>
-        {history && history.length !== 0 ? (
-          <View style={styles.swipe}>
-            <IconComunity
-              name={'gesture-tap-hold'}
-              size={20}
-              style={{color: 'brown'}}
-            />
-            <Text style={styles.swipeText}>Hold on an item to delete</Text>
-          </View>
-        ) : (
-          <Text>Sorry we cant find anything</Text>
-        )}
+        <View style={styles.swipe}>
+          {history && history.length > 0 ? (
+            <>
+              <IconComunity
+                name={'gesture-tap-hold'}
+                size={20}
+                style={{color: 'brown'}}
+              />
+              <Text style={styles.swipeText}>Hold on an item to delete</Text>
+            </>
+          ) : (
+            <Text style={styles.swipeText}>Sorry we cant find anything</Text>
+          )}
+        </View>
       </View>
       {history && history.length > 0 && (
         <FlatList
@@ -86,9 +91,9 @@ function History() {
             return (
               <Card
                 image={item.image}
-                status={item.status}
+                status={item.status_name}
                 productName={item.product_name}
-                subtotal={item.subtotal}
+                total={item.total}
               />
             );
           }}

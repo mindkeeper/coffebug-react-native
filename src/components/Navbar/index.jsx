@@ -6,7 +6,7 @@ import Icons from 'react-native-vector-icons/FontAwesome5';
 import IconIon from 'react-native-vector-icons/Ionicons';
 import IconComunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntIcons from 'react-native-vector-icons/AntDesign';
-
+import imgDefault from '../../assets/images/default.png';
 import {Divider} from '@rneui/themed';
 
 import styles from './styles';
@@ -65,9 +65,12 @@ function Navbar({children}) {
         <Pressable
           style={styles.continerSwipe}
           onPress={() => navigation.navigate('Profile')}>
-          <Image source={{uri: user.image}} style={styles.imageDrawer} />
+          <Image
+            source={user.image ? {uri: user.image} : imgDefault}
+            style={styles.imageDrawer}
+          />
           <Text style={styles.username}>
-            {user.display_name ? `${user.display_name}` : 'Your username here'}
+            {user.username ? `${user.username}` : 'Your username here'}
           </Text>
           <Text style={styles.email}>{user.email}</Text>
         </Pressable>
@@ -195,9 +198,14 @@ function Navbar({children}) {
                 transform: [{rotateY: '180deg'}],
                 fontSize: 25,
                 marginHorizontal: 7,
+                color: '#6A4029',
               }}
             />
-            <IconIon name={'search-outline'} style={styles.Icons} />
+            <IconIon
+              name={'search-outline'}
+              style={styles.Icons}
+              onPress={() => navigation.navigate('Search')}
+            />
             <IconIon name={'cart-outline'} style={styles.Icons} />
           </View>
         </View>

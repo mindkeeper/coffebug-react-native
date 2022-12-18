@@ -9,7 +9,7 @@ import React from 'react';
 import {currencyFormatter} from '../../../modules/helper/currencyFormatter';
 import styles from './styles';
 
-const History = ({image, productName, status, subtotal}) => {
+const History = ({image, productName, status, total}) => {
   const {width} = useWindowDimensions();
   return (
     <TouchableOpacity
@@ -29,7 +29,7 @@ const History = ({image, productName, status, subtotal}) => {
         <View style={{paddingLeft: 10}}>
           <Text style={styles.cardTitle}>{productName}</Text>
           <Text style={styles.cardPrice}>{`IDR. ${currencyFormatter(
-            subtotal,
+            total,
           )}`}</Text>
           <Text style={styles.cardStatus}>{status}</Text>
         </View>

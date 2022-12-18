@@ -1,11 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch} from 'react-redux';
 import authAction from '../../redux/actions/auth';
 import transactionActions from '../../redux/actions/transaction';
 import userAction from '../../redux/actions/user';
 
-
-export const clearState = async (dispatch) => {
+export const clearState = async dispatch => {
   try {
     dispatch(userAction.reset());
     dispatch(authAction.resetState());

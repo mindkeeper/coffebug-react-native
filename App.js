@@ -16,6 +16,7 @@ import History from './src/screens/History';
 import Profile from './src/screens/Profile';
 import Splashscreen from './src/screens/Splash';
 import EditProfile from './src/screens/EditProfile';
+import Search from './src/screens/Search';
 
 function App() {
   const Stack = createStackNavigator();
@@ -105,6 +106,11 @@ function App() {
         <Stack.Screen
           component={EditProfile}
           name="EditProfile"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={Search}
+          name="Search"
           options={{headerShown: false}}
         />
       </Stack.Navigator>
