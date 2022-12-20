@@ -2,10 +2,17 @@ import ACTION_STRING from './actionString';
 import {
   getProducts as apiGetProducts,
   getDetail as apiGetDetail,
+  createProduct as apiCreateProduct,
 } from '../../modules/api/product';
 
-const {getProducts, getProductDetails, pending, rejected, fulfilled} =
-  ACTION_STRING;
+const {
+  getProducts,
+  getProductDetails,
+  createProduct,
+  pending,
+  rejected,
+  fulfilled,
+} = ACTION_STRING;
 
 const getProductsPending = () => ({
   type: getProducts.concat(pending),
@@ -32,6 +39,20 @@ const getProductDetailsRejected = error => ({
 
 const getProductDetailsFulfilled = data => ({
   type: getProductDetails.concat(fulfilled),
+  payload: {data},
+});
+
+const createProductPending = () => ({
+  type: createProduct.concat(pending),
+});
+
+const createProductRejected = error => ({
+  type: createProduct.concat(rejected),
+  payload: {error},
+});
+
+const createProductFulfilled = data => ({
+  type: createProduct.concat(fulfilled),
   payload: {data},
 });
 
@@ -63,6 +84,24 @@ const getProductDetailsThunk = (id, cbSuccess, cbDenied) => {
   };
 };
 
-const productActions = {getProductDetailsThunk, getProductsThunk};
+const createProductThunk =
+  (body, token, cbSuccess, cbDenied) => async dispacth => {
+    try {
+      dispacth(createProductPending());
+      const result = await apiCreateProduct(body, token);
+      dispacth(createProductFulfilled(result.data));
+      typeof cbSuccess() === 'function' && cbSuccess(result.data.data.id);
+    } catch (error) {
+      console.log(error);
+      dispacth(createProductRejected(error));
+      typeof cbDenied === 'function' && cbDenied();
+    }
+  };
+
+const productActions = {
+  getProductDetailsThunk,
+  getProductsThunk,
+  createProductThunk,
+};
 
 export default productActions;

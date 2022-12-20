@@ -17,6 +17,8 @@ import Profile from './src/screens/Profile';
 import Splashscreen from './src/screens/Splash';
 import EditProfile from './src/screens/EditProfile';
 import Search from './src/screens/Search';
+import Promo from './src/screens/Promo';
+import NewProduct from './src/screens/Admin/NewProduct';
 
 function App() {
   const Stack = createStackNavigator();
@@ -111,6 +113,16 @@ function App() {
         <Stack.Screen
           component={Search}
           name="Search"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={Promo}
+          name="Promo"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={NewProduct}
+          name="NewProduct"
           options={{headerShown: false}}
         />
       </Stack.Navigator>

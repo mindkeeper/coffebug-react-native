@@ -18,7 +18,7 @@ function Splashscreen() {
   // const [visible, setVisible] = useState(true);
   const navigateStarted = () => {
     clearState(dispatch);
-    navigation.dispatch(StackActions.replace('Welcome'));
+    navigation.dispatch(StackActions.replace('Landing'));
   };
   const navigateHome = () => navigation.dispatch(StackActions.replace('Home'));
 

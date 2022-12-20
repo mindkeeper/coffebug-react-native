@@ -19,6 +19,7 @@ import {Divider} from '@rneui/themed';
 import {useDispatch, useSelector} from 'react-redux';
 import transactionActions from '../../redux/actions/transaction';
 import {currencyFormatter} from '../../modules/helper/currencyFormatter';
+import PushNotification from 'react-native-push-notification';
 
 function Payment() {
   const [Payment, setPayment] = useState();
@@ -29,6 +30,14 @@ function Payment() {
   const cart = useSelector(state => state.transaction.cart);
   const token = useSelector(state => state.auth.userData.token);
 
+  const createNotification = transactionId => {
+    PushNotification.localNotification({
+      channelId: 'local-notification',
+      title: 'Transaction Success',
+      message: `your transaction ${transactionId} created successfully`,
+    });
+    return navigation.navigate('History');
+  };
   const size = () => {
     let size = 'Reguler';
     if ((cart.sizeId = '2')) size = 'Large';
@@ -50,14 +59,20 @@ function Payment() {
 
     const body = {
       product_id: cart.productId,
-      size_id: cart.sizeId.toString(),
+      size_id: cart.sizeId,
       qty: cart.qty,
       promo_id: '1',
       subtotal: cart.subtotal,
       delivery_id: cart.deliveryId,
       payment_id: Payment,
     };
-    dispatch(transactionActions.createTransactionThunk(body, token));
+    dispatch(
+      transactionActions.createTransactionThunk(
+        body,
+        token,
+        createNotification,
+      ),
+    );
     setLoading(false);
   };
 
@@ -234,7 +249,8 @@ function Payment() {
                     color: 'white',
                     fontFamily: 'Poppins-Bold',
                     fontSize: 16,
-                    paddingLeft: 35,
+                    paddingLeft: 30,
+                    alignContent: 'center',
                   }}>
                   Proceed payment
                 </Text>

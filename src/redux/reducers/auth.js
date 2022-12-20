@@ -137,7 +137,7 @@ const authReducer = (prevState = initialState, {type, payload}) => {
     case logout + fulfilled:
       return initialState;
 
-    case reset:
+    case authReset:
       return initialState;
 
     default:

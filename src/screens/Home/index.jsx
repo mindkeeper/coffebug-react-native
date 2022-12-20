@@ -2,26 +2,31 @@ import React, {useEffect, useState} from 'react';
 
 import styles from './styles';
 import Navbar from '../../components/Navbar';
-import Sample from '../../assets/images/product.png';
+import IconIon from 'react-native-vector-icons/Ionicons';
 
 import {
-  Image,
   Text,
   View,
   Pressable,
   ScrollView,
   useWindowDimensions,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import productActions from '../../redux/actions/product';
 import ProductCard from '../../components/Cards/ProductCard';
+import promoActions from '../../redux/actions/promo';
+import PromoCard from '../../components/Cards/Promo';
 
 const Home = () => {
   const navigation = useNavigation();
   const {height} = useWindowDimensions();
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false);
+  const role = useSelector(state => state.auth.userData.role);
+  console.log(role);
   const [query, setQuery] = useState({
     sort: 'popular',
     categories: '',
@@ -29,15 +34,24 @@ const Home = () => {
   });
   const products = useSelector(state => state.products.products);
   const isLoading = useSelector(state => state.products.isLoading);
+  const promos = useSelector(state => state.promos.promos);
+  const promoLoading = useSelector(state => state.promos.isLoading);
 
   useEffect(() => {
     dispatch(productActions.getProductsThunk(query));
   }, [query]);
 
   useEffect(() => {
+    dispatch(promoActions.getPromoThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
     let refresh = false;
     const focusEvent = navigation.addListener('focus', e => {
-      if (refresh) dispatch(productActions.getProductsThunk(query));
+      if (refresh) {
+        dispatch(productActions.getProductsThunk(query));
+        dispatch(promoActions.getPromoThunk());
+      }
     });
     const blurEvent = navigation.addListener('blur', e => {
       refresh = true;
@@ -64,7 +78,7 @@ const Home = () => {
           <Text
             style={styles.see}
             onPress={() => {
-              navigation.navigate('ScreenFavorite');
+              navigation.navigate('Search', 'popular');
             }}>
             See more
           </Text>
@@ -97,7 +111,7 @@ const Home = () => {
           <Text
             style={styles.see}
             onPress={() => {
-              navigation.navigate('ScreenPromo');
+              navigation.navigate('Promo');
             }}>
             See more
           </Text>
@@ -105,53 +119,66 @@ const Home = () => {
             showsHorizontalScrollIndicator={false}
             horizontal={true}
             style={{height: height / 2}}>
-            <Pressable style={styles.card}>
-              <View style={styles.containerImage}>
-                <Image source={Sample} style={styles.imageCard} />
+            {promoLoading ? (
+              <View style={styles.loading}>
+                <ActivityIndicator size="large" color="black" />
               </View>
-              <View style={styles.containerTitle}>
-                <Text style={styles.cardTitle}>Hazelnut Latte</Text>
-                <Text style={styles.cardPrice}>IDR 25.000</Text>
-              </View>
-            </Pressable>
-            <Pressable style={styles.card}>
-              <View style={styles.containerImage}>
-                <Image source={Sample} style={styles.imageCard} />
-              </View>
-              <View style={styles.containerTitle}>
-                <Text style={styles.cardTitle}>Hazelnut Latte</Text>
-                <Text style={styles.cardPrice}>IDR 25.000</Text>
-              </View>
-            </Pressable>
-            <Pressable style={styles.card}>
-              <View style={styles.containerImage}>
-                <Image source={Sample} style={styles.imageCard} />
-              </View>
-              <View style={styles.containerTitle}>
-                <Text style={styles.cardTitle}>Hazelnut Latte</Text>
-                <Text style={styles.cardPrice}>IDR 25.000</Text>
-              </View>
-            </Pressable>
-            <Pressable style={styles.card}>
-              <View style={styles.containerImage}>
-                <Image source={Sample} style={styles.imageCard} />
-              </View>
-              <View style={styles.containerTitle}>
-                <Text style={styles.cardTitle}>Hazelnut Latte</Text>
-                <Text style={styles.cardPrice}>IDR 25.000</Text>
-              </View>
-            </Pressable>
-            <Pressable style={styles.card}>
-              <View style={styles.containerImage}>
-                <Image source={Sample} style={styles.imageCard} />
-              </View>
-              <View style={styles.containerTitle}>
-                <Text style={styles.cardTitle}>Hazelnut Latte</Text>
-                <Text style={styles.cardPrice}>IDR 25.000</Text>
-              </View>
-            </Pressable>
+            ) : promos && promos.length === 0 ? (
+              <Text>We can't find anything</Text>
+            ) : (
+              promos.map(item => {
+                return (
+                  <PromoCard
+                    key={item.id}
+                    img={item.image}
+                    name={item.promo_name}
+                    code={item.code}
+                  />
+                );
+              })
+            )}
           </ScrollView>
+          {role === 'Admin' && (
+            <Pressable onPress={() => setModalVisible(true)}>
+              <IconIon name={'add-circle'} style={styles.addCircle} />
+            </Pressable>
+          )}
         </ScrollView>
+
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <View style={{flexDirection: 'row'}}>
+                <Pressable
+                  style={[styles.buttonCircle]}
+                  onPress={() => setModalVisible(!modalVisible)}>
+                  <IconIon
+                    name={'close-circle-sharp'}
+                    style={styles.removeCircle}
+                  />
+                </Pressable>
+                <View>
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                      navigation.navigate('NewProduct');
+                    }}>
+                    <Text style={styles.textStyle}>New Product</Text>
+                  </Pressable>
+                  <Pressable style={[styles.button, styles.buttonClose]}>
+                    <Text style={styles.textStyle}>New Promo</Text>
+                  </Pressable>
+                </View>
+              </View>
+            </View>
+          </View>
+        </Modal>
       </Navbar>
     </View>
   );

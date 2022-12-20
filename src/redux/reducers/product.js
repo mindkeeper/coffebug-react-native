@@ -10,8 +10,14 @@ const initialState = {
 };
 
 const productReducer = (prevState = initialState, {type, payload}) => {
-  const {getProducts, getProductDetails, pending, rejected, fulfilled} =
-    ACTION_STRING;
+  const {
+    getProducts,
+    getProductDetails,
+    createProduct,
+    pending,
+    rejected,
+    fulfilled,
+  } = ACTION_STRING;
   switch (type) {
     case getProducts.concat(pending):
       return {
@@ -59,6 +65,27 @@ const productReducer = (prevState = initialState, {type, payload}) => {
         ...prevState,
         isLoading: false,
         productDetail: payload.data.data,
+      };
+
+    case createProduct.concat(pending):
+      return {
+        ...prevState,
+        isLoading: true,
+        isError: false,
+      };
+
+    case createProduct.concat(rejected):
+      return {
+        ...prevState,
+        isLoading: false,
+        isError: true,
+        error: payload.error.response.data.msg,
+      };
+
+    case createProduct.concat(fulfilled):
+      return {
+        ...prevState,
+        isLoading: false,
       };
 
     default:

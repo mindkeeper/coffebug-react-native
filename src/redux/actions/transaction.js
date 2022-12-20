@@ -60,7 +60,7 @@ const createTransactionThunk =
       dispatch(createTransactionPending());
       const result = await createTrans(body, token);
       dispatch(createTransactionFulfilled(result.data));
-      typeof cbSuccess === 'function' && cbSuccess();
+      typeof cbSuccess === 'function' && cbSuccess(result.data.data.id);
     } catch (error) {
       dispatch(createTransactionRejected(error));
       typeof cbDenied === 'function' && cbDenied();

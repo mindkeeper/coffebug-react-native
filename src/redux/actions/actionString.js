@@ -14,6 +14,8 @@ const ACTION_STRING = {
   authReset: 'AUTH_RESET',
   userReset: 'USER_RESET',
   transactionReset: 'TRANSACTION_RESET',
+  getPromo: 'GET_PROMO',
+  createProduct : "CREATE_PRODUCT",
   pending: '_PENDING',
   fulfilled: '_FULFILLED',
   rejected: '_REJECTED',

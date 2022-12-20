@@ -71,8 +71,69 @@ const styles = StyleSheet.create({
   },
   loading: {
     backgroundColor: 'transparent',
-    alignItems: 'center',
+    paddingLeft: 160,
     justifyContent: 'center',
+  },
+  addCircle: {
+    position: 'relative',
+    bottom: 70,
+    fontSize: 80,
+    marginHorizontal: 3,
+    color: '#6A4029',
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalView: {
+    // margin: 20,
+    // backgroundColor: "white",
+    // borderRadius: 20,
+    // padding: 35,
+    // alignItems: "center",
+    // shadowColor: "#000",
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 4,
+    // elevation: 5,
+  },
+  button: {
+    borderRadius: 10,
+    width: 200,
+    // marginHorizontal: 10,
+    marginVertical: 10,
+    padding: 10,
+    paddingVertical: 20,
+    elevation: 2,
+  },
+  buttonClose: {
+    backgroundColor: '#FFBA33',
+  },
+  textStyle: {
+    color: '#6A4029',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    fontFamily: 'Poppins-Bold',
+    width: 200,
+    color: 'black',
+    fontSize: 25,
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  removeCircle: {
+    fontSize: 80,
+    marginHorizontal: 3,
+    marginVertical: 35,
+    color: '#FFBA33',
+    // backgroundColor: 'white',
+    borderRadius: 100,
   },
 });
 

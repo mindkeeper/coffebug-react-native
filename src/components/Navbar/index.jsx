@@ -91,14 +91,16 @@ function Navbar({children}) {
               <Text style={styles.textBottom}>Edit Profile</Text>
             </Pressable>
             <Divider style={{width: '90%', margin: 3}} />
-            <View style={styles.containerBottom}>
+            <Pressable
+              style={styles.containerBottom}
+              onPress={() => navigation.navigate('Cart')}>
               <IconComunity
                 name="cart-arrow-down"
                 size={20}
                 style={styles.imageBottom}
               />
               <Text style={styles.textBottom}>Orders</Text>
-            </View>
+            </Pressable>
             <Divider style={{width: '90%', margin: 3}} />
             <View style={styles.containerBottom}>
               <IconComunity

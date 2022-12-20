@@ -11,3 +11,6 @@ export const getProducts = query => {
 };
 
 export const getDetail = id => axios.get(`${baseUrl}/${id}`);
+
+export const createProduct = (body, token) =>
+  axios.post(baseUrl, body, config(token));

@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import IconComunity from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Divider} from '@rneui/themed';
-import {useRoute} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import productActions from '../../redux/actions/product';
 import debounce from 'lodash.debounce';
@@ -17,9 +17,11 @@ import {
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import Navbar from '../../components/Navbar';
+import {currencyFormatter} from '../../modules/helper/currencyFormatter';
 const Search = () => {
   const router = useRoute();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const products = useSelector(state => state.products.products);
   const pagination = useSelector(state => state.products.pagination);
   const isLoading = useSelector(state => state.products.isLoading);
@@ -29,9 +31,9 @@ const Search = () => {
     search: '',
     page: 1,
     categories: '',
-    sort: '',
+    sort: router.params || '',
   });
-
+  console.log(router.params);
   const nextItems = () => {
     if (query.page == pagination.totalPage) return;
     return setQuery({...query, page: query.page + 1});
@@ -51,12 +53,6 @@ const Search = () => {
   useEffect(() => {
     dispatch(productActions.getProductsThunk(query));
   }, [query]);
-
-  // useEffect(() => {
-  //   return () => {
-  //     debounceHandler.cancel();
-  //   };
-  // });
 
   const renderFooter = () => {
     return (
@@ -96,15 +92,17 @@ const Search = () => {
                   : query.categories || query.sort}
               </Text>
               <View style={styles.boxInput}>
-                <TextInput
-                  placeholder="Input Search Here..."
-                  placeholderTextColor={'#9F9F9F'}
-                  style={styles.input}
-                  onChangeText={text => searchHandler(text)}
-                />
+                {showSearch && (
+                  <TextInput
+                    placeholder="Input Search Here..."
+                    placeholderTextColor={'#9F9F9F'}
+                    style={styles.input}
+                    onChangeText={text => searchHandler(text)}
+                  />
+                )}
                 <Divider orientation="vertical" width={1} subHeader />
                 <IconComunity
-                  name={showSearch ? 'magnify' : 'window-close'}
+                  name={showSearch ? 'window-close' : 'magnify'}
                   size={20}
                   style={styles.icons}
                   onPress={() => {
@@ -115,17 +113,7 @@ const Search = () => {
             </View>
             <Text style={styles.category}>All Products</Text>
 
-            {isLoading ? (
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  flex: 1,
-                  paddingTop: 200,
-                }}>
-                <ActivityIndicator size={'large'} />
-              </View>
-            ) : products && products.length == 0 ? (
+            {products && products.length == 0 ? (
               <View
                 style={{
                   justifyContent: 'center',
@@ -156,7 +144,9 @@ const Search = () => {
                           <Text style={styles.titleFood}>
                             {item.product_name}
                           </Text>
-                          <Text style={styles.priceFood}>{item.price}</Text>
+                          <Text style={styles.priceFood}>
+                            {`IDR. ${currencyFormatter(item.price)}`}
+                          </Text>
                         </View>
                       </Pressable>
                     </>
