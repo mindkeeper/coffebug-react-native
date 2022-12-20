@@ -54,7 +54,6 @@ function ProductDetail(props) {
   useEffect(() => {
     dispatch(productAction.getProductDetailsThunk(productId));
   }, [dispatch]);
-  console.log(productId, detail);
   return (
     <View style={styles.container}>
       <View style={styles.navbar}>

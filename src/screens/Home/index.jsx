@@ -133,6 +133,7 @@ const Home = () => {
                     img={item.image}
                     name={item.promo_name}
                     code={item.code}
+                    id={item.id}
                   />
                 );
               })
@@ -171,7 +172,12 @@ const Home = () => {
                     }}>
                     <Text style={styles.textStyle}>New Product</Text>
                   </Pressable>
-                  <Pressable style={[styles.button, styles.buttonClose]}>
+                  <Pressable
+                    style={[styles.button, styles.buttonClose]}
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                      navigation.navigate('NewPromo');
+                    }}>
                     <Text style={styles.textStyle}>New Promo</Text>
                   </Pressable>
                 </View>

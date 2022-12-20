@@ -1,5 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import IconComunity from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconIon from 'react-native-vector-icons/Ionicons';
 import {Divider} from '@rneui/themed';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
@@ -26,7 +27,6 @@ const Search = () => {
   const pagination = useSelector(state => state.products.pagination);
   const isLoading = useSelector(state => state.products.isLoading);
   const [modalVisible, setModalVisible] = useState(false);
-  const [showSearch, setShowSearch] = useState(false);
   const [query, setQuery] = useState({
     search: '',
     page: 1,
@@ -85,33 +85,28 @@ const Search = () => {
       <View style={{flex: 1}}>
         <View style={styles.scrolles}>
           <View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.filter} onPress={() => setModalVisible(true)}>
-                {!query.categories && !query.sort
-                  ? 'FILTER'
-                  : query.categories || query.sort}
-              </Text>
-              <View style={styles.boxInput}>
-                {showSearch && (
-                  <TextInput
-                    placeholder="Input Search Here..."
-                    placeholderTextColor={'#9F9F9F'}
-                    style={styles.input}
-                    onChangeText={text => searchHandler(text)}
-                  />
-                )}
-                <Divider orientation="vertical" width={1} subHeader />
-                <IconComunity
-                  name={showSearch ? 'window-close' : 'magnify'}
-                  size={20}
-                  style={styles.icons}
-                  onPress={() => {
-                    setShowSearch(!showSearch);
-                  }}
+            <View style={{backgroundColor: '#F9F9F9'}}>
+              <Text style={styles.category}>All Products</Text>
+              <View style={styles.wrapperSearch}>
+                {/* <FontAwesome icon={SolidIcons.search} style={styles.iconSearch} /> */}
+                <IconIon name={'search-outline'} style={styles.Icons} />
+                <TextInput
+                  style={styles.textPlaceholder}
+                  placeholder="Search"
+                  placeholderTextColor="black"
+                  onChangeText={text => searchHandler(text)}
                 />
               </View>
+              <View style={styles.inputContainer}>
+                <Text
+                  style={styles.filter}
+                  onPress={() => setModalVisible(true)}>
+                  {!query.categories && !query.sort
+                    ? 'FILTER'
+                    : query.categories || query.sort}
+                </Text>
+              </View>
             </View>
-            <Text style={styles.category}>All Products</Text>
 
             {products && products.length == 0 ? (
               <View

@@ -4,16 +4,18 @@ import styles from './styles';
 import IconComunity from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import {useSelector} from 'react-redux';
+import {useNavigation} from '@react-navigation/native';
 
-const CardPromo = ({img, name, code}) => {
+const CardPromo = ({img, name, code, id}) => {
   const role = useSelector(state => state.auth.userData.role);
+  const navigation = useNavigation();
 
   return (
     <Pressable style={styles.card}>
       {role === 'Admin' && (
         <Pressable
           style={styles.conPencl}
-          onPress={() => setModalVisible(true)}>
+          onPress={() => navigation.navigate('EditPromo', id)}>
           <IconComunity name={'pencil'} style={styles.pencil} size={20} />
         </Pressable>
       )}

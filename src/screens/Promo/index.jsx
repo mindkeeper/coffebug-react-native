@@ -116,6 +116,8 @@ function Promo() {
                   image={item.image}
                   promoName={item.promo_name}
                   promoCode={item.code}
+                  key={item.id}
+                  id={item.id}
                 />
               );
             }}

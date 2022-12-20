@@ -33,7 +33,6 @@ function EditProfile() {
   const [modal, setModalVisible] = useState(false);
 
   const dispatch = useDispatch();
-  const navigation = useNavigation();
   const profile = useSelector(state => state.profile.profile);
   const isLoading = useSelector(state => state.profile.isLoading);
   const token = useSelector(state => state.auth.userData.token);

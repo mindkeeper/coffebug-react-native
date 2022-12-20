@@ -145,6 +145,31 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontFamily: 'Poppins-Bold',
   },
+  textPlaceholder: {
+    // fontFamily: 'Poppins-SemiBold',
+    fontWeight: 'bold',
+    fontSize: 17,
+    flex: 1,
+    color: 'black',
+  },
+  Icons: {
+    fontSize: 30,
+    marginHorizontal: 3,
+    color: 'grey',
+  },
+  wrapperSearch: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingLeft: 30,
+    // marginLeft: 40,
+    //  marginRight: 25,
+    marginHorizontal: 40,
+    marginVertical: 20,
+    borderRadius: 30,
+    backgroundColor: '#EFEEEE',
+    elevation: 1,
+    shadowColor: '#393939',
+  },
 });
 
 export default styles;

@@ -19,6 +19,8 @@ import EditProfile from './src/screens/EditProfile';
 import Search from './src/screens/Search';
 import Promo from './src/screens/Promo';
 import NewProduct from './src/screens/Admin/NewProduct';
+import NewPromo from './src/screens/Admin/NewPromo';
+import EditPromo from './src/screens/Admin/EditPromo';
 
 function App() {
   const Stack = createStackNavigator();
@@ -123,6 +125,16 @@ function App() {
         <Stack.Screen
           component={NewProduct}
           name="NewProduct"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={NewPromo}
+          name="NewPromo"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={EditPromo}
+          name="EditPromo"
           options={{headerShown: false}}
         />
       </Stack.Navigator>

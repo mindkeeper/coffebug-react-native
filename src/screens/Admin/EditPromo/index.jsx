@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -13,30 +13,31 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import camera from '../../../assets/images/camera.png';
 import {useSelector, useDispatch} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
-import productActions from '../../../redux/actions/product';
+import promoActions from '../../../redux/actions/promo';
 
-function NewProduct() {
+function EditPromo(props) {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [body, setBody] = useState({});
   const [file, setFile] = useState();
   const token = useSelector(state => state.auth.userData.token);
+  const detail = useSelector(state => state.promos.detail);
+  const isLoading = useSelector(state => state.promos.isLoading);
+  const id = props.route.params;
 
   const changeHandler = (text, name) => {
     setBody(body => ({...body, [name]: text}));
   };
 
-  const createProductHandler = () => {
-    const success = id => {
+  const editPromoHandler = () => {
+    const success = () => {
       ToastAndroid.showWithGravityAndOffset(
-        `Product Created`,
+        `Promo Updated`,
         ToastAndroid.SHORT,
         ToastAndroid.TOP,
         25,
         50,
       );
-      console.log(id);
-      navigation.navigate('ProductDetail', id);
     };
     const error = error => {
       ToastAndroid.showWithGravityAndOffset(
@@ -55,12 +56,16 @@ function NewProduct() {
         uri:
           Platform.OS !== 'android' ? 'file://' + file[0]?.uri : file[0]?.uri,
       });
-    body.productName && bodies.append('productname', body.productName);
-    body.price && bodies.append('price', body.price);
+    body.promoName && bodies.append('promo_name', body.promoName);
+    body.discount && bodies.append('discount', body.discount);
     body.description && bodies.append('description', body.description);
-    body.categoryId && bodies.append('category_id', body.categoryId);
+    body.code && bodies.append('code', body.code);
+    body.duration && bodies.append('duration', body.duration);
+    body.minPrice && bodies.append('min_price', body.minPrice);
+    console.log(bodies);
+    console.log(body);
 
-    dispatch(productActions.createProductThunk(bodies, token, success, error));
+    dispatch(promoActions.editPromoThunk(id, bodies, token, success, error));
   };
 
   let cameraLauncher = () => {
@@ -108,6 +113,11 @@ function NewProduct() {
       setFile(response.assets);
     });
   };
+
+  useEffect(() => {
+    dispatch(promoActions.getPromoDetailThunk(id, token));
+  }, [dispatch]);
+
   return (
     <>
       <ScrollView>
@@ -116,7 +126,13 @@ function NewProduct() {
           <View style={styles.container_up}>
             <Image
               style={styles.image}
-              source={file ? {uri: file[0].uri} : camera}
+              source={
+                file
+                  ? {uri: file[0].uri}
+                  : detail.image
+                  ? {uri: detail.image}
+                  : camera
+              }
             />
             <ButtonOpacity
               color={'#000000'}
@@ -140,41 +156,70 @@ function NewProduct() {
               width={'60%'}
               marginBottom={10}
               marginTop={20}
-              // onPress={postRegister}
               onPressHandler={{
                 onPress: libraryLauncher,
               }}
             />
           </View>
           <View>
-            <Text style={styles.text}>Product Name</Text>
+            <Text style={styles.text}>Promo Name</Text>
             <TextInput
               style={styles.input_bottom}
-              placeholder="Type product name min. 30 characters"
+              placeholder={
+                detail?.promo_name || 'Type promo name max. 30 characters'
+              }
               keyboardType="none"
               placeholderTextColor="#9F9F9F"
-              onChangeText={text => changeHandler(text, 'productName')}
+              onChangeText={text => changeHandler(text, 'promoName')}
             />
-            <Text style={styles.text}>Price</Text>
+            <Text style={styles.text}>Discount</Text>
             <TextInput
               style={styles.input_bottom}
-              placeholder="Type product price"
+              placeholder={
+                detail.discount ? detail.discount : 'Type Discount Percentage'
+              }
               keyboardType="numeric"
               placeholderTextColor="#9F9F9F"
-              onChangeText={text => changeHandler(parseInt(text), 'price')}
+              onChangeText={num =>
+                changeHandler(parseInt(num) / 100, 'discount')
+              }
             />
-            <Text style={styles.text}>Category</Text>
+            <Text style={styles.text}>Promo Code</Text>
             <TextInput
               style={styles.input_bottom}
-              placeholder="Type Category id"
+              placeholder={detail.code ? detail.code : 'Type Promo Code'}
+              keyboardType="none"
+              placeholderTextColor="#9F9F9F"
+              onChangeText={text => changeHandler(text, 'code')}
+            />
+            <Text style={styles.text}>Promo Durations</Text>
+            <TextInput
+              style={styles.input_bottom}
+              placeholder={
+                detail.duration ? detail.duration : 'Type Promo Durations'
+              }
               keyboardType="numeric"
               placeholderTextColor="#9F9F9F"
-              onChangeText={text => changeHandler(parseInt(text), 'categoryId')}
+              onChangeText={text => changeHandler(text, 'duration')}
+            />
+            <Text style={styles.text}>Promo Minimum Price</Text>
+            <TextInput
+              style={styles.input_bottom}
+              placeholder={
+                detail.min_price ? detail.min_price : 'Type Promo Durations'
+              }
+              keyboardType="numeric"
+              placeholderTextColor="#9F9F9F"
+              onChangeText={text => changeHandler(parseInt(text), 'minPrice')}
             />
             <Text style={styles.text}>Description</Text>
             <TextInput
               style={styles.input_bottom}
-              placeholder="Describe your product max. 150 characters"
+              placeholder={
+                detail.description
+                  ? detail.description
+                  : 'Describe your promo max. 150 characters'
+              }
               keyboardType="none"
               placeholderTextColor="#9F9F9F"
               onChangeText={text => changeHandler(text, 'description')}
@@ -183,7 +228,7 @@ function NewProduct() {
           <View>
             <ButtonOpacity
               color={'#6A4029'}
-              text="Create Product"
+              text="Create Promo"
               radius={20}
               colorText="white"
               height={70}
@@ -192,76 +237,14 @@ function NewProduct() {
               marginTop={20}
               // onPress={postRegister}
               onPressHandler={{
-                onPress: createProductHandler,
+                onPress: editPromoHandler,
               }}
             />
           </View>
         </View>
       </ScrollView>
-      {/* <Modal
-        visible={modalVisible}
-        transparent={true}
-        onRequestClose={() => {
-          setModalVisible();
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <View
-              style={{
-                justifyContent: 'flex-end',
-                position: 'absolute',
-                right: 15,
-                top: 15,
-              }}>
-              <IconComunity
-                name="window-close"
-                size={50}
-                style={styles.icons}
-                onPress={() => setModalVisible(!modalVisible)}
-              />
-            </View>
-            <Pressable
-              style={{
-                marginTop: 20,
-                marginBottom: 15,
-                padding: 10,
-                backgroundColor: '#DCDCDC',
-              }}
-              onPress={() => {
-                launchCameras();
-                setModalVisible(!modalVisible);
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Black',
-                  color: '#868686',
-                  fontSize: 17,
-                  textAlign: 'center',
-                }}>
-                OPEN CAMERA
-              </Text>
-            </Pressable>
-            <Pressable
-              style={{padding: 10, backgroundColor: '#DCDCDC'}}
-              onPress={() => {
-                launchImageLibrarys();
-                setModalVisible(!modalVisible);
-              }}>
-              <Text
-                style={{
-                  fontFamily: 'Poppins-Black',
-                  color: '#868686',
-                  fontSize: 17,
-                  textAlign: 'center',
-                }}>
-                OPEN IMAGE LIBRARY
-              </Text>
-            </Pressable>
-          </View>
-        </View>
-      </Modal> */}
     </>
   );
 }
 
-export default NewProduct;
+export default EditPromo;

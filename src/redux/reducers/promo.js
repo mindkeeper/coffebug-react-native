@@ -6,10 +6,19 @@ const initialState = {
   error: '',
   promos: [],
   pagination: {},
+  detail: {},
 };
 
 const promoReducer = (prevState = initialState, {type, payload}) => {
-  const {getPromo, pending, fulfilled, rejected} = ACTION_STRING;
+  const {
+    getPromo,
+    createPromo,
+    editPromo,
+    getPromoDetail,
+    pending,
+    fulfilled,
+    rejected,
+  } = ACTION_STRING;
 
   switch (type) {
     case getPromo.concat(pending):
@@ -36,6 +45,82 @@ const promoReducer = (prevState = initialState, {type, payload}) => {
         isLoading: false,
         promos: page > 1 ? [...prevState.promos, ...newData] : newData,
         pagination: payload.data.meta,
+      };
+
+    case createPromo.concat(pending):
+      return {
+        ...prevState,
+        isLoading: true,
+        isError: false,
+        error: '',
+      };
+
+    case createPromo.concat(rejected):
+      return {
+        ...prevState,
+        isLoading: false,
+        isError: true,
+        error: payload.error.response.data.msg,
+      };
+
+    case createPromo.concat(fulfilled):
+      return {
+        ...prevState,
+        isLoading: false,
+      };
+
+    case getPromoDetail.concat(pending):
+      return {
+        ...prevState,
+        isLoading: true,
+        isError: false,
+        error: '',
+      };
+
+    case getPromoDetail.concat(rejected):
+      return {
+        ...prevState,
+        isLoading: false,
+        isError: true,
+        error: payload.error.response.data.msg,
+      };
+
+    case getPromoDetail.concat(fulfilled):
+      return {
+        ...prevState,
+        isLoading: false,
+        detail: {
+          promo_name: payload.data.data.promo_name,
+          code: payload.data.data.code,
+          discount: payload.data.data.discount,
+          description: payload.data.data.description,
+          duration: payload.data.data.duration,
+          image: payload.data.data.image,
+          min_price: payload.data.data.min_price,
+        },
+      };
+
+    case editPromo.concat(pending):
+      return {
+        ...prevState,
+        isLoading: true,
+        isError: false,
+        error: '',
+      };
+
+    case editPromo.concat(rejected):
+      return {
+        ...prevState,
+        isLoading: false,
+        isError: true,
+        error: payload.error.response.data.msg,
+      };
+
+    case editPromo.concat(fulfilled):
+      return {
+        ...prevState,
+        isLoading: false,
+        detail: {...prevState.detail, ...payload.data.data},
       };
 
     default:
