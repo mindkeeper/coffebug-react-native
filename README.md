@@ -96,7 +96,6 @@ You can download the latest debug app [here](https://bit.ly/coffebug-mobile)
     <img width="250" src="src\assets\images\native-homepage.jpg">   
     <img width="250" src="src\assets\images\native-search.jpg">
     <img width="250"  src="src\assets\images\native-history.jpg">
-    <img width="250"  src="src\assets\images\native-search.jpg">
     
 </div>
 
