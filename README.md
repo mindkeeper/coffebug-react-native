@@ -92,7 +92,7 @@ You can download the latest debug app [here](https://bit.ly/coffebug-mobile)
 
 ## Screenshots
 
-<div align="center" >
+<div align="center"  >
     <img width="250" style="margin-bottom : 16px" src="src\assets\images\native-homepage.jpg">   
     <img width="250" style="margin-bottom : 16px"src="src\assets\images\native-search.jpg">
     <img width="250" style="margin-bottom : 16px"src="src\assets\images\native-history.jpg">
